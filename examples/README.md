@@ -56,6 +56,14 @@ A NumPy simulator for the Avellaneda-Stoikov (2008) optimal market making model,
 - Monte Carlo comparison of inventory-aware and symmetric quoting
 - Calibrating volatility from OpenBB price data
 
+### order_book_imbalance
+
+A limit order book simulator (Cont, Stoikov and Talreja, 2010) with order book imbalance measures that also work on real quote data.
+
+- Queue and multi-level depth imbalance, size-weighted mid
+- Order flow imbalance (OFI) and its linear price impact regression
+- How well imbalance predicts the next mid-price move
+
 ### openbbPlatformAsLLMTools
 
 This notebook shows you how you can use OpenbB Platform as functions in an LLM by leveraging function calling.
