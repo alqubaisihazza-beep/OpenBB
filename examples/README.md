@@ -48,6 +48,14 @@ This notebook explains how to calculate and plot the Copper-to-Gold ratio.
 - Performing basic DataFrame operations.
 - Creating charts with Plotly Graph Objects.
 
+### avellaneda_stoikov
+
+A NumPy simulator for the Avellaneda-Stoikov (2008) optimal market making model, with tests and a comparison against the paper's results.
+
+- Reservation price and optimal spread
+- Monte Carlo comparison of inventory-aware and symmetric quoting
+- Calibrating volatility from OpenBB price data
+
 ### openbbPlatformAsLLMTools
 
 This notebook shows you how you can use OpenbB Platform as functions in an LLM by leveraging function calling.
