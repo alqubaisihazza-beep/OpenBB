@@ -151,6 +151,9 @@ def test_microprice(book_data):
     assert adj[0] == pytest.approx(-adj[-1])
     assert all(abs(a) < 0.5 for a in adj)
     assert one_tick[0].adjustment == pytest.approx(adj[0] * TICK)
+    g1 = [r.next_move_ticks for r in one_tick]
+    assert g1 == sorted(g1)
+    assert g1[0] == pytest.approx(-g1[-1])
 
 
 def test_examples_run():

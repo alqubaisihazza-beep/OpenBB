@@ -484,6 +484,7 @@ class LobMicropriceQueryParams(QueryParams):
         "spread_ticks",
         "adjustment",
         "adjustment_ticks",
+        "next_move_ticks",
     )
 
     data: list[Data] = Field(description="Order book snapshots, in time order.")
@@ -519,6 +520,12 @@ class LobMicropriceData(Data):
     )
     adjustment_ticks: float | None = Field(
         default=None, description="The adjustment in ticks."
+    )
+    next_move_ticks: float | None = Field(
+        default=None,
+        description="First-order term g1: expected mid change at the next price"
+        " move only, in ticks. A better forecast of the next change when moves"
+        " are autocorrelated.",
     )
 
 
@@ -558,8 +565,10 @@ def microprice(params: LobMicropriceQueryParams) -> OBBject[list[LobMicropriceDa
     out = []
     for spread_ticks in model.adjustment.columns:
         col = model.adjustment[spread_ticks].to_numpy()
+        first = model.first_order[spread_ticks].to_numpy()
         for i, value in enumerate(col):
             ok = isfinite(value)
+            g1 = first[i]
             out.append(
                 LobMicropriceData(
                     imbalance_low=float(edges[i]),
@@ -567,6 +576,9 @@ def microprice(params: LobMicropriceQueryParams) -> OBBject[list[LobMicropriceDa
                     spread_ticks=int(spread_ticks),
                     adjustment=float(value) if ok else None,
                     adjustment_ticks=float(value / model.tick_size) if ok else None,
+                    next_move_ticks=(
+                        float(g1 / model.tick_size) if isfinite(g1) else None
+                    ),
                 )
             )
     return OBBject(results=out)
