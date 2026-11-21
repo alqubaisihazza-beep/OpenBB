@@ -181,3 +181,20 @@ def test_quantitative_performance_sortino_ratio(prices_data):
     )
     assert result.status_code == 200
     assert result.json()["results"]
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize(
+    "command, params",
+    [
+        ("features", {"levels": 2}),
+        ("ofi", {"freq": "10s"}),
+        ("price_impact", {"freq": "10s"}),
+        ("imbalance_signal", {"bins": 4}),
+        ("microprice", {"n_imbalance": 4}),
+    ],
+)
+def test_quantitative_lob(book_data, command, params):
+    result = _post(f"lob/{command}", {"data": book_data, **params})
+    assert result.status_code == 200
+    assert result.json()["results"]

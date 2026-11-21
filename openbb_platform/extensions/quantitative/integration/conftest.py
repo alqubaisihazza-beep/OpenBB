@@ -68,3 +68,40 @@ def _timeseries_records() -> list[dict]:
 def prices_data() -> list[dict]:
     """Deterministic OHLCV records for the quantitative command tests."""
     return _timeseries_records()
+
+
+def _book_records(n: int = 2000, tick: float = 0.01) -> list[dict]:
+    """Two-level order book snapshots where the thinner queue empties first."""
+    rng = np.random.default_rng(_SEED)
+    bid, qb, qa = 10000, 50.0, 50.0
+    start = pd.Timestamp("2024-01-02 09:30")
+    rows = []
+    for i in range(n):
+        qb += rng.normal(0, 8)
+        qa += rng.normal(0, 8)
+        if qa <= 0:
+            bid += 1
+            qb, qa = rng.uniform(20, 80), rng.uniform(20, 80)
+        elif qb <= 0:
+            bid -= 1
+            qb, qa = rng.uniform(20, 80), rng.uniform(20, 80)
+        rows.append(
+            {
+                "date": (start + pd.Timedelta(milliseconds=100 * i)).isoformat(),
+                "bid_price_1": round(bid * tick, 2),
+                "bid_size_1": round(float(qb), 2),
+                "ask_price_1": round((bid + 1) * tick, 2),
+                "ask_size_1": round(float(qa), 2),
+                "bid_price_2": round((bid - 1) * tick, 2),
+                "bid_size_2": 70.0,
+                "ask_price_2": round((bid + 2) * tick, 2),
+                "ask_size_2": 70.0,
+            }
+        )
+    return rows
+
+
+@pytest.fixture(scope="session")
+def book_data() -> list[dict]:
+    """Order book snapshots as JSON-ready records."""
+    return _book_records()

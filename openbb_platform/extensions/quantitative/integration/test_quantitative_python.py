@@ -158,3 +158,20 @@ def test_quantitative_performance_sortino_ratio(obb, prices_data):
     )
     assert isinstance(result, OBBject)
     assert result.results
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize(
+    "command, params",
+    [
+        ("features", {"levels": 2}),
+        ("ofi", {"freq": "10s"}),
+        ("price_impact", {"freq": "10s"}),
+        ("imbalance_signal", {"bins": 4}),
+        ("microprice", {"n_imbalance": 4}),
+    ],
+)
+def test_quantitative_lob(obb, book_data, command, params):
+    result = getattr(obb.quantitative.lob, command)(data=book_data, **params)
+    assert isinstance(result, OBBject)
+    assert result.results
