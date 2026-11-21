@@ -28,6 +28,11 @@ EXPECTED_ROUTES = {
     "/performance/omega_ratio",
     "/performance/sharpe_ratio",
     "/performance/sortino_ratio",
+    "/lob/features",
+    "/lob/ofi",
+    "/lob/price_impact",
+    "/lob/imbalance_signal",
+    "/lob/microprice",
 }
 
 
